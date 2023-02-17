@@ -90,12 +90,6 @@ jobs:
         if: matrix.os == 'windows-latest'
         run: pnpm run pkg:win
 
-      - name: action-zip
-        if: matrix.os == 'macOS-latest'
-        uses: montudor/action-zip@v1.0.0
-        with:
-          args: zip -qq -r ./dist/test-pkg-rl.zip ./dist/test-pkg-rl.app
-
       - name: update release macOS
         if: matrix.os == 'macOS-latest'
         uses: ncipollo/release-action@v1

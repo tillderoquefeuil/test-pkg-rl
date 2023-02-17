@@ -65,4 +65,7 @@ cat > $BIN_PATH/$PROJECT.app/Contents/Info.plist << EOF
 </plist>
 EOF
 
+# Create the zip file
+zip ./dist/test-pkg-rl.zip ./dist/test-pkg-rl.app
+
 echo "Done! ❤️"
