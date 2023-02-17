@@ -96,7 +96,7 @@ jobs:
       #   env:
       #     GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
       #   with:
-      #     upload_url: ${{needs.create.outputs.upload_url}}
+      #     upload_url: ${{ needs.create.outputs.upload_url}}
       #     asset_path: test-pkg-rl.zip
       #     asset_name: test-pkg-rl-${{ matrix.os }}.zip
       #     asset_content_type: application/zip
@@ -105,6 +105,6 @@ jobs:
         id: update_release
         with:
           token: ${{ secrets.GH_TOKEN }}
-          tag: ${{ env.tag_prefix }}${{ steps.date.outputs.date }}
+          tag: ${{ needs.create.outputs.tag_name }}
           allowUpdates: true
           artifacts: "./test-pkg-rl.zip"
