@@ -39,7 +39,7 @@ jobs:
         os: [windows-latest, macOS-latest]
 
     steps:
-      # - uses: actions/checkout@v3
+      - uses: actions/checkout@v3
 
       # - uses: actions/setup-node@v3
       #   name: Install Node.js
