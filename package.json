@@ -11,7 +11,7 @@
     "dev": "ts-node ./src/index.ts",
     "build": "pnpm clean:build && tsc",
     "preview": "pnpm run build && node build/index.js",
-    "pkg:mac": "pnpm clean:dist && pnpm build && pkg . -t node18-macos && ./buildMacApp.sh",
+    "pkg:mac": "pnpm clean:dist && pnpm build && pkg . -t node18-macos-arm64 && ./buildMacApp.sh",
     "pkg:win": "pnpm clean:dist && pnpm build && pkg . -t host && shx mv ./dist/test-pkg-rl.exe ./dist/test-pkg-rl-win.exe",
     "app": "./dist/test-pkg-rl"
   },
