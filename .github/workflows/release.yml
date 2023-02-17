@@ -9,6 +9,8 @@ jobs:
   create:
     name: Create release
     runs-on: ubuntu-latest
+    outputs:
+      upload_url: ${{ steps.create_release.outputs.upload_url }}
     steps:
       - name: Get current date
         id: date
@@ -34,14 +36,9 @@ jobs:
         os: [macOS-latest]
 
     steps:
-    - name: Echo upload url
-        shell: bash
-        run: |
-          echo ${{ needs.jobs.create.steps.create_release.outputs.upload_url }}
-    - name: Echo output
-        shell: bash
-        run: |
-          echo ${{ needs.jobs.create.steps.create_release.outputs }}
+      - env:
+          OUTPUT1: ${{needs.create.outputs.upload_url}}
+        run: echo "$OUTPUT1"
 
   # build:
   #   name: Build & upload release [${{ matrix.os }}]
