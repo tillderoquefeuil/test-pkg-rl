@@ -67,6 +67,6 @@ EOF
 
 # Create the zip file
 cd ./dist
-zip -r ./test-pkg-rl.zip ./test-pkg-rl.app
+zip -r ./test-pkg-rl-macos.zip ./test-pkg-rl.app
 
 echo "Done! ❤️"
