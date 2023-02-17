@@ -1,5 +1,5 @@
 NAME=test-pkg-rl
-PROJECT=$NAME
+PROJECT=$NAME-$1
 BIN_PATH=./dist/
 ICON_PATH=./src/resources/icon.png
 
@@ -9,6 +9,9 @@ rm -rf $BIN_PATH/$PROJECT.app
 # Create the .app folder
 mkdir -p $BIN_PATH/$PROJECT.app/Contents/MacOS
 mkdir -p $BIN_PATH/$PROJECT.app/Contents/Resources
+
+# Sign the executable
+codesign --deep --force --verbose --sign - $BIN_PATH/$PROJECT
 
 # Copy the executable
 cp $BIN_PATH/$PROJECT $BIN_PATH/$PROJECT.app/Contents/MacOS/$NAME
@@ -66,7 +69,7 @@ cat > $BIN_PATH/$PROJECT.app/Contents/Info.plist << EOF
 EOF
 
 # Create the zip file
-cd ./dist
-zip -r ./test-pkg-rl-macos.zip ./test-pkg-rl.app
+cd $BIN_PATH
+zip -r $NAME-macos-$1.zip $PROJECT.app
 
 echo "Done! ❤️"
