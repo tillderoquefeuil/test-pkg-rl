@@ -93,7 +93,7 @@ jobs:
       - name: update release macOS
         if: matrix.os == 'macOS-latest'
         uses: ncipollo/release-action@v1
-        id: update_release
+        id: update_release_macos
         with:
           token: ${{ secrets.GH_TOKEN }}
           tag: ${{ needs.create.outputs.tag_name }}
@@ -103,7 +103,7 @@ jobs:
       - name: update release window
         if: matrix.os == 'windows-latest'
         uses: ncipollo/release-action@v1
-        id: update_release
+        id: update_release_win
         with:
           token: ${{ secrets.GH_TOKEN }}
           tag: ${{ needs.create.outputs.tag_name }}
