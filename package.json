@@ -12,7 +12,7 @@
     "build": "pnpm clean:build && tsc",
     "preview": "pnpm run build && node build/index.js",
     "pkg:mac": "pnpm clean:dist && pnpm build && pkg . && ./buildMacApp.sh",
-    "pkg:win": "pnpm clean:dist && pnpm build && pkg .",
+    "pkg:win": "pnpm clean:dist && pnpm build && pkg . && shx mv ./dist/test-pkg-rl.exe ./dist/test-pkg-rl-win.exe",
     "app": "./dist/test-pkg-rl"
   },
   "pkg": {

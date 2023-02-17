@@ -98,7 +98,8 @@ jobs:
           token: ${{ secrets.GH_TOKEN }}
           tag: ${{ needs.create.outputs.tag_name }}
           allowUpdates: true
-          artifacts: "./dist/test-pkg-rl.zip"
+          artifacts: "./dist/test-pkg-rl-macos.zip"
+          draft: true
 
       - name: update release window
         if: matrix.os == 'windows-latest'
@@ -108,4 +109,5 @@ jobs:
           token: ${{ secrets.GH_TOKEN }}
           tag: ${{ needs.create.outputs.tag_name }}
           allowUpdates: true
-          artifacts: "./dist/test-pkg-rl.exe"
+          artifacts: "./dist/test-pkg-rl-win.exe"
+          draft: true
