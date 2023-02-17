@@ -20,7 +20,7 @@ jobs:
       - name: Get current date
         id: date
         run: |
-          echo "NOW=$(date +'%Y%m%d-%H%M%S')" >> $GITHUB_OUTPUT
+          echo "NOW=$(date +'%Y%m%d')" >> $GITHUB_OUTPUT
       - name: create release
         uses: ncipollo/release-action@v1
         id: create_release
@@ -44,54 +44,54 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - uses: actions/setup-node@v3
-        name: Install Node.js
-        with:
-          node-version: 18
+      # - uses: actions/setup-node@v3
+      #   name: Install Node.js
+      #   with:
+      #     node-version: 18
 
-      - uses: pnpm/action-setup@v2
-        name: Install pnpm
-        id: pnpm-install
-        with:
-          version: 7
-          run_install: false
+      # - uses: pnpm/action-setup@v2
+      #   name: Install pnpm
+      #   id: pnpm-install
+      #   with:
+      #     version: 7
+      #     run_install: false
 
-      - name: Get pnpm store directory
-        id: pnpm-cache
-        shell: bash
-        run: |
-          echo "STORE_PATH=$(pnpm store path)" >> $GITHUB_OUTPUT
+      # - name: Get pnpm store directory
+      #   id: pnpm-cache
+      #   shell: bash
+      #   run: |
+      #     echo "STORE_PATH=$(pnpm store path)" >> $GITHUB_OUTPUT
 
-      - uses: actions/cache@v3
-        name: Setup pnpm cache
-        with:
-          path: ${{ steps.pnpm-cache.outputs.STORE_PATH }}
-          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
-          restore-keys: |
-            ${{ runner.os }}-pnpm-store-
+      # - uses: actions/cache@v3
+      #   name: Setup pnpm cache
+      #   with:
+      #     path: ${{ steps.pnpm-cache.outputs.STORE_PATH }}
+      #     key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+      #     restore-keys: |
+      #       ${{ runner.os }}-pnpm-store-
 
-      - name: Get pnpm file path
-        shell: bash
-        run: |
-          PNPM_VERSION=$(pnpm -v)
-          echo "PNPM_FILE=\"/c/users/runneradmin/setup-pnpm/node_modules/.pnpm/pnpm@$PNPM_VERSION/node_modules/pnpm/bin/pnpm.cjs\"" >> $GITHUB_ENV
+      # - name: Get pnpm file path
+      #   shell: bash
+      #   run: |
+      #     PNPM_VERSION=$(pnpm -v)
+      #     echo "PNPM_FILE=\"/c/users/runneradmin/setup-pnpm/node_modules/.pnpm/pnpm@$PNPM_VERSION/node_modules/pnpm/bin/pnpm.cjs\"" >> $GITHUB_ENV
 
-      #TODO - Remove this once https://github.com/electron-userland/electron-builder/issues/6933#issuecomment-1213438889 is resolved
-      - name: Tweak pnpm.cjs
-        if: matrix.os == 'windows-latest'
-        run: sed -i 's/\/usr\/bin\/env node/node/g' ${{env.PNPM_FILE}}
-        shell: bash
+      # #TODO - Remove this once https://github.com/electron-userland/electron-builder/issues/6933#issuecomment-1213438889 is resolved
+      # - name: Tweak pnpm.cjs
+      #   if: matrix.os == 'windows-latest'
+      #   run: sed -i 's/\/usr\/bin\/env node/node/g' ${{env.PNPM_FILE}}
+      #   shell: bash
 
-      - name: Install dependencies
-        run: pnpm install
+      # - name: Install dependencies
+      #   run: pnpm install
 
-      - name: build macOS
-        if: matrix.os == 'macOS-latest'
-        run: pnpm run pkg:mac
+      # - name: build macOS
+      #   if: matrix.os == 'macOS-latest'
+      #   run: pnpm run pkg:mac
 
-      - name: build windows
-        if: matrix.os == 'windows-latest'
-        run: pnpm run pkg:win
+      # - name: build windows
+      #   if: matrix.os == 'windows-latest'
+      #   run: pnpm run pkg:win
 
       - name: update release macOS
         if: matrix.os == 'macOS-latest'
@@ -102,17 +102,17 @@ jobs:
           name: ${{ needs.create.outputs.release_name }}
           tag: ${{ needs.create.outputs.tag_name }}
           allowUpdates: true
-          artifacts: "./dist1/test-pkg-rl-macos*.zip"
-          draft: true
+          artifacts: "./dist1/test-pkg-rl*.zip"
+          # draft: true
 
-      - name: update release window
-        if: matrix.os == 'windows-latest'
-        uses: ncipollo/release-action@v1
-        id: update_release_win
-        with:
-          token: ${{ secrets.GH_TOKEN }}
-          name: ${{ needs.create.outputs.release_name }}
-          tag: ${{ needs.create.outputs.tag_name }}
-          allowUpdates: true
-          artifacts: "./dist/test-pkg-rl-win.exe"
-          draft: true
+      # - name: update release window
+      #   if: matrix.os == 'windows-latest'
+      #   uses: ncipollo/release-action@v1
+      #   id: update_release_win
+      #   with:
+      #     token: ${{ secrets.GH_TOKEN }}
+      #     name: ${{ needs.create.outputs.release_name }}
+      #     tag: ${{ needs.create.outputs.tag_name }}
+      #     allowUpdates: true
+      #     artifacts: "./dist/test-pkg-rl-win.exe"
+      #     draft: true
