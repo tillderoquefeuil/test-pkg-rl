@@ -90,16 +90,6 @@ jobs:
       #   if: matrix.os == 'windows-latest'
       #   run: pnpm run pkg:win
 
-      # - name: Upload Release Asset
-      #   id: upload-release-asset 
-      #   uses: actions/upload-release-asset@v1
-      #   env:
-      #     GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
-      #   with:
-      #     upload_url: ${{ needs.create.outputs.upload_url}}
-      #     asset_path: test-pkg-rl.zip
-      #     asset_name: test-pkg-rl-${{ matrix.os }}.zip
-      #     asset_content_type: application/zip
       - name: update release
         uses: ncipollo/release-action@v1
         id: update_release
@@ -107,4 +97,4 @@ jobs:
           token: ${{ secrets.GH_TOKEN }}
           tag: ${{ needs.create.outputs.tag_name }}
           allowUpdates: true
-          artifacts: "test-pkg-rl.zip"
+          artifacts: "wtf.zip"
