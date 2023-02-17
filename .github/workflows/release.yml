@@ -12,82 +12,65 @@ jobs:
 
     strategy:
       matrix:
-        os: [windows-latest, macOS-latest]
+        os: [macOS-latest]
+        # os: [windows-latest, macOS-latest]
 
     steps:
       - uses: actions/checkout@v3
 
-      - uses: actions/setup-node@v3
-        name: Install Node.js
+      # - uses: actions/setup-node@v3
+      #   name: Install Node.js
+      #   with:
+      #     node-version: 18
+
+      # - uses: pnpm/action-setup@v2
+      #   name: Install pnpm
+      #   id: pnpm-install
+      #   with:
+      #     version: 7
+      #     run_install: false
+
+      # - name: Get pnpm store directory
+      #   id: pnpm-cache
+      #   shell: bash
+      #   run: |
+      #     echo "STORE_PATH=$(pnpm store path)" >> $GITHUB_OUTPUT
+
+      # - uses: actions/cache@v3
+      #   name: Setup pnpm cache
+      #   with:
+      #     path: ${{ steps.pnpm-cache.outputs.STORE_PATH }}
+      #     key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+      #     restore-keys: |
+      #       ${{ runner.os }}-pnpm-store-
+
+      # - name: Get pnpm file path
+      #   shell: bash
+      #   run: |
+      #     PNPM_VERSION=$(pnpm -v)
+      #     echo "PNPM_FILE=\"/c/users/runneradmin/setup-pnpm/node_modules/.pnpm/pnpm@$PNPM_VERSION/node_modules/pnpm/bin/pnpm.cjs\"" >> $GITHUB_ENV
+
+      # #TODO - Remove this once https://github.com/electron-userland/electron-builder/issues/6933#issuecomment-1213438889 is resolved
+      # - name: Tweak pnpm.cjs
+      #   if: matrix.os == 'windows-latest'
+      #   run: sed -i 's/\/usr\/bin\/env node/node/g' ${{env.PNPM_FILE}}
+      #   shell: bash
+
+      # - name: Install dependencies
+      #   run: pnpm install
+
+      # - name: build macOS
+      #   if: matrix.os == 'macOS-latest'
+      #   run: pnpm run pkg:mac
+
+      # - name: build windows
+      #   if: matrix.os == 'windows-latest'
+      #   run: pnpm run pkg:win
+
+      - uses: ncipollo/release-action@v1
         with:
-          node-version: 18
+          artifacts: "test-pkg-rl.zip"
+          tag: ${{ github.ref }}
+          commit: ${{ github.sha }}
 
-      - uses: pnpm/action-setup@v2
-        name: Install pnpm
-        id: pnpm-install
-        with:
-          version: 7
-          run_install: false
 
-      - name: Get pnpm store directory
-        id: pnpm-cache
-        shell: bash
-        run: |
-          echo "STORE_PATH=$(pnpm store path)" >> $GITHUB_OUTPUT
-
-      - uses: actions/cache@v3
-        name: Setup pnpm cache
-        with:
-          path: ${{ steps.pnpm-cache.outputs.STORE_PATH }}
-          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
-          restore-keys: |
-            ${{ runner.os }}-pnpm-store-
-
-      - name: Get pnpm file path
-        shell: bash
-        run: |
-          PNPM_VERSION=$(pnpm -v)
-          echo "PNPM_FILE=\"/c/users/runneradmin/setup-pnpm/node_modules/.pnpm/pnpm@$PNPM_VERSION/node_modules/pnpm/bin/pnpm.cjs\"" >> $GITHUB_ENV
-
-      #TODO - Remove this once https://github.com/electron-userland/electron-builder/issues/6933#issuecomment-1213438889 is resolved
-      - name: Tweak pnpm.cjs
-        if: matrix.os == 'windows-latest'
-        run: sed -i 's/\/usr\/bin\/env node/node/g' ${{env.PNPM_FILE}}
-        shell: bash
-
-      - name: Install dependencies
-        run: pnpm install
-
-      - name: build macOS
-        if: matrix.os == 'macOS-latest'
-        run: pnpm run pkg:mac
-
-      - name: build windows
-        if: matrix.os == 'windows-latest'
-        run: pnpm run pkg:win
-
-      - name: Create Release
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
-        with:
-          tag_name: ${{ github.ref }}
-          release_name: Release ${{ github.ref }}
-          body: |
-            Changes in this Release
-            - First Change
-            - Second Change
-          draft: false
-          prerelease: false
-
-      - name: Upload Release Asset
-        id: upload-release-asset 
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./test-pkg-rl.zip
-          asset_name: test-pkg-rl-${{ matrix.os }}.zip
-          asset_content_type: application/zip
