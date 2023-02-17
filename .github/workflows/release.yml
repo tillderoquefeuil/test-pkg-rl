@@ -11,9 +11,11 @@ jobs:
     runs-on: ubuntu-latest
     env:
       tag_prefix: nightly-tag-
+      release_prefix: Release 
     outputs:
       upload_url: ${{ steps.create_release.outputs.upload_url }}
       tag_name: ${{ env.tag_prefix }}${{ steps.date.outputs.date }}
+      release_name: ${{ env.release_prefix }}${{ steps.date.outputs.date }}
     steps:
       - name: Get current date
         id: date
@@ -96,6 +98,7 @@ jobs:
         id: update_release_macos
         with:
           token: ${{ secrets.GH_TOKEN }}
+          name: ${{ needs.create.outputs.release_name }}
           tag: ${{ needs.create.outputs.tag_name }}
           allowUpdates: true
           artifacts: "./dist/test-pkg-rl-macos.zip"
@@ -107,6 +110,7 @@ jobs:
         id: update_release_win
         with:
           token: ${{ secrets.GH_TOKEN }}
+          name: ${{ needs.create.outputs.release_name }}
           tag: ${{ needs.create.outputs.tag_name }}
           allowUpdates: true
           artifacts: "./dist/test-pkg-rl-win.exe"
