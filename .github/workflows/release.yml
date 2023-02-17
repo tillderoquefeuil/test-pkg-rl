@@ -12,10 +12,6 @@ jobs:
     env:
       tag_prefix: nightly-tag-
       release_prefix: Release 
-    outputs:
-      upload_url: ${{ steps.create_release.outputs.upload_url }}
-      tag_name: ${{ env.tag_prefix }}${{ steps.date.outputs.date }}
-      release_name: ${{ env.release_prefix }}${{ steps.date.outputs.date }}
     steps:
       - name: Get current date
         id: date
@@ -30,6 +26,11 @@ jobs:
           commit: ${{ github.sha }}
           draft: true
           allowUpdates: true
+      - name: save outputs
+        run: |
+          echo "UPLOAD_URL=${{ steps.create_release.outputs.upload_url }}" >> $GITHUB_OUTPUT
+          echo "TAG_NAME=${{ env.tag_prefix }}${{ steps.date.outputs.date }}" >> $GITHUB_OUTPUT
+          echo "RELEASE_NAME=${{ env.release_prefix }}${{ steps.date.outputs.date }}" >> $GITHUB_OUTPUT
 
   build:
     name: Build & upload release [${{ matrix.os }}]
@@ -98,8 +99,8 @@ jobs:
         id: update_release_macos
         with:
           token: ${{ secrets.GH_TOKEN }}
-          name: ${{ needs.create.outputs.release_name }}
-          tag: ${{ needs.create.outputs.tag_name }}
+          name: ${{ needs.create.outputs.RELEASE_NAME }}
+          tag: ${{ needs.create.outputs.TAG_NAME }}
           allowUpdates: true
           artifacts: "./dist/test-pkg-rl-macos-*.zip"
           draft: true
@@ -110,8 +111,8 @@ jobs:
         id: update_release_win
         with:
           token: ${{ secrets.GH_TOKEN }}
-          name: ${{ needs.create.outputs.release_name }}
-          tag: ${{ needs.create.outputs.tag_name }}
+          name: ${{ needs.create.outputs.RELEASE_NAME }}
+          tag: ${{ needs.create.outputs.TAG_NAME }}
           allowUpdates: true
           artifacts: "./dist/test-pkg-rl-win.exe"
           draft: true
